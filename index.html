@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amplop Tahun Baru</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* Global Styles */
+    body {
+      background: linear-gradient(to bottom, #87ceeb, #f0f8ff),
+        url('https://placehold.co/1200x800?text=Background+Ulang+Tahun+Pacar') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .center-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s forwards;
+    }
+
+    .message {
+      font-size: 24px;
+      color: #1e90ff;
+      text-shadow: 0 0 8px rgba(30, 144, 255, 0.7);
+      animation: smoothGlow 1.5s alternate infinite ease-in-out;
+    }
+
+    @keyframes smoothGlow {
+      0% {
+        text-shadow: 0 0 10px rgba(30, 144, 255, 0.8);
+      }
+      100% {
+        text-shadow: 0 0 20px rgba(30, 144, 255, 1);
+      }
+    }
+
+    .envelope {
+      font-size: 100px;
+      cursor: pointer;
+      color: #1e90ff;
+      animation: smoothBounce 1.2s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    @keyframes smoothBounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .notification {
+      display: none;
+      animation: fadeIn 1s forwards;
+    }
+
+    .notification img {
+      width: 200px;
+      height: 200px;
+      border: 5px solid #1e90ff;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .notification button {
+      padding: 10px 20px;
+      background: white;
+      border: 2px solid #1e90ff;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #1e90ff;
+      font-weight: bold;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .notification button:hover {
+      background: #1e90ff;
+      color: white;
+    }
+
+    .paper {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s forwards;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: confettiFall 4s linear infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Initial Envelope -->
+  <div class="center-container" id="initialEnvelope">
+    <div class="message">Ada amplop Tahun Baru nih, buka yuk! 🥰</div>
+    <div class="envelope" onclick="showNotification(1)">
+      <i class="fas fa-envelope"></i>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="center-container notification" id="notification1">
+    <p>Matt Tahun Baru 🥳</p>
+    <img src="https://placehold.co/200" alt="Kue ulang tahun" />
+    <button onclick="showNotification(2)">OK</button>
+  </div>
+  <div class="center-container notification" id="notification2">
+    <p>Bukan madu tapi manis ☺</p>
+    <img src="https://placehold.co/200" alt="Gift pertama" />
+    <button onclick="showNotification(3)">OK</button>
+  </div>
+  <div class="center-container notification" id="notification3">
+    <p>Semoga sehat selalu yaa 🤗</p>
+    <img src="https://placehold.co/200" alt="Gift kedua" />
+    <button onclick="showNotification(4)">OK</button>
+  </div>
+  <div class="center-container notification" id="notification4">
+    <p>Makasi telah buat hari-hariku berwarna, sayang ❤️</p>
+    <button onclick="showFinalEnvelope()">OK</button>
+  </div>
+
+  <!-- Final Envelope -->
+  <div class="center-container" id="finalEnvelope" style="display: none;">
+    <div class="message">Balas amplop untuk doi</div>
+    <div class="envelope" onclick="showPaper()">
+      <i class="fas fa-envelope"></i>
+    </div>
+    <div class="paper" id="paper">
+      <p>Katakan sepatah kata dari hati:</p>
+      <textarea id="comment"></textarea>
+      <button onclick="sendComment()">Kirim</button>
+    </div>
+  </div>
+
+  <!-- Confetti -->
+  <div id="confetti"></div>
+
+  <!-- Scripts -->
+  <script>
+    function showNotification(step) {
+      const currentNotification = document.querySelector('.notification:not([style*="display: none"])');
+      if (currentNotification) {
+        currentNotification.style.animation = 'fadeOut 1s forwards';
+        setTimeout(() => {
+          currentNotification.style.display = 'none';
+          displayNotification(step);
+        }, 1000);
+      } else {
+        displayNotification(step);
+      }
+    }
+
+    function displayNotification(step) {
+      document.getElementById('initialEnvelope').style.display = 'none';
+      const nextNotification = document.getElementById(`notification${step}`);
+      nextNotification.style.display = 'block';
+      nextNotification.style.animation = 'fadeIn 1s forwards';
+      if (step === 1) startConfetti();
+    }
+
+    function showFinalEnvelope() {
+      document.getElementById('finalEnvelope').style.display = 'block';
+      document.getElementById('finalEnvelope').style.animation = 'fadeIn 1s forwards';
+    }
+
+    function showPaper() {
+      document.getElementById('paper').style.display = 'block';
+    }
+
+    function sendComment() {
+      const comment = document.getElementById('comment').value;
+      alert(`Pesan Anda: ${comment}`);
+    }
+
+    function startConfetti() {
+      const confettiContainer = document.getElementById('confetti');
+      for (let i = 0; i < 50; i++) {
+        const confettiPiece = document.createElement('div');
+        confettiPiece.classList.add('confetti-piece');
+        confettiPiece.style.left = Math.random() * 100 + 'vw';
+        confettiPiece.style.backgroundColor = getRandomColor();
+        confettiPiece.style.animationDuration = Math.random() * 3 + 2 + 's';
+        confettiContainer.appendChild(confettiPiece);
+      }
+    }
+
+    function getRandomColor() {
+      const colors = ['#ff477e', '#ff7096', '#32cd32', '#ffd700'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+  </script>
+</body>
+</html>
